@@ -79,7 +79,7 @@ contract Spoke is GoldSmithState, WmbApp {
         if (metal == MetalType.GOLD) {
             // in case chainlink is not present, send back approx price
             if (address(AuDataFeed) == address(0)) {
-                return 6448e16;
+                return 198455e16;
             }
 
             // prettier-ignore
@@ -94,7 +94,7 @@ contract Spoke is GoldSmithState, WmbApp {
         } else if (metal == MetalType.SILVER) {
             // in case chainlink is not present, send back approx price
             if (address(AgDataFeed) == address(0)) {
-                return 7434e14;
+                return 2309e16;
             }
             // prettier-ignore
             (
