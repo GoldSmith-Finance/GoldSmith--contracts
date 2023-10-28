@@ -2,7 +2,7 @@
 pragma solidity ^0.8.18;
 
 import "./GoldSmithState.sol";
-import "message-bridge-contracts/WmbApp.sol";
+import "message-bridge-contracts/app/WmbApp.sol";
 
 contract GoldSmithHub is GoldSmithState, WmbApp {
     /* ================ CONTRACT MAIN STATE VARS ================ */

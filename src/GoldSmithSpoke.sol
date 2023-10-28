@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.18;
 
 import "./GoldSmithState.sol";
-import "message-bridge-contracts/WmbApp.sol";
+import {MetalToken} from "./MetalToken.sol";
+import "message-bridge-contracts/app/WmbApp.sol";
 import {AggregatorV3Interface} from "chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import {IERC20 as OZ_IERC20} from "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 
@@ -22,7 +23,7 @@ contract Spoke is GoldSmithState, WmbApp {
     OZ_IERC20 public buyWithToken; // DAI in this case
     mapping(MetalType => MetalToken) public metalTokens;
     mapping(MetalType => uint256) public buyPool; //pool used to back Metals Tokens by RWA
-    mapping(uint16 => address) public spokeAddresses; //spoke contract addresses on different chains
+    mapping(uint => address) public spokeAddresses; //spoke contract addresses on different chains
     uint48 liquidationRatio; //liquidation percentage with 3 decimals
 
     //pool state
@@ -31,7 +32,7 @@ contract Spoke is GoldSmithState, WmbApp {
     mapping(address => mapping(PoolType => uint256)) public userPoolSupplyData; // user => hash of pool and token => amount of token
     mapping(address => mapping(PoolType => uint256)) public userPoolBorrowData; // user => hash of pool and token => amount of token
 
-    uint16 hubChain;
+    uint hubChain;
     address hubAddress;
 
     AggregatorV3Interface internal AuDataFeed;
@@ -50,7 +51,7 @@ contract Spoke is GoldSmithState, WmbApp {
     constructor(
         uint _hubChain,
         address _hubAddress,
-        address admin,
+        address _admin,
         address _wmbGateway,
         OZ_IERC20 _buyWithToken,
         MetalToken Au,
@@ -58,7 +59,7 @@ contract Spoke is GoldSmithState, WmbApp {
         AggregatorV3Interface AuDataFeed_,
         AggregatorV3Interface AgDataFeed_
     ) {
-        initialize(admin, _wmbGateway);
+        initialize(_admin, _wmbGateway);
 
         admin = msg.sender;
         hubChain = _hubChain;
@@ -121,7 +122,7 @@ contract Spoke is GoldSmithState, WmbApp {
 
         uint256 totalPrice = (uint256(pricePerGram) * (amountInGrams)) / 1000; // converting to price w/ decimals = 18
 
-        uint256 fee = estimateFee(toChainId, GAS_LIMIT);
+        uint256 fee = estimateFee(hubChain, GAS_LIMIT);
         require(msg.value >= fee, "Insufficient fee");
 
         //prettier-ignore
@@ -162,7 +163,7 @@ contract Spoke is GoldSmithState, WmbApp {
             amountOfTokens
         );
 
-        uint256 fee = estimateFee(toChainId, GAS_LIMIT);
+        uint256 fee = estimateFee(hubChain, GAS_LIMIT);
         require(msg.value >= fee, "Insufficient fee");
 
         _dispatchMessage(hubChain, hubAddress, payload, msg.value); //send data to hub chain
@@ -176,7 +177,7 @@ contract Spoke is GoldSmithState, WmbApp {
     ) public payable {
         metalTokens[metalType].burn(msg.sender, amountOfTokens);
 
-        uint256 fee = estimateFee(toChainId, GAS_LIMIT);
+        uint256 fee = estimateFee(destChain, GAS_LIMIT);
         require(msg.value >= fee, "Insufficient fee");
 
         address destSpokeContract = spokeAddresses[destChain];
