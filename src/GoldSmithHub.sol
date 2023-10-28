@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.18;
 
 import "./GoldSmithState.sol";
 import "message-bridge-contracts/WmbApp.sol";
@@ -44,9 +44,9 @@ contract GoldSmithHub is GoldSmithState, WmbApp {
         Action actionType = abi.decode(data, (Action));
 
         if (actionType == Action.MINT_METAL) {
-            mintMetal(payload);
+            mintMetal(data);
         } else if (actionType == Action.BURN_METAL) {
-            burnMetal(payload);
+            burnMetal(data);
         }
     }
 }
