@@ -1,0 +1,1 @@
+2147484198 {hubaddress} 0x332dE499eF93F6dc3674896aA4Ee934067917257 0x9454C2F15F308098163623D5E7deCe366793efD3 {buywithtoken} {au} {ag} {audatafeed} {agdatafeed}
