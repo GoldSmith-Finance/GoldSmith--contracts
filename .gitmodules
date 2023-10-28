@@ -1,0 +1,5 @@
+[submodule "lib/message-bridge-contracts"]
+	path = lib/message-bridge-contracts
+	url = https://github.com/wanchain/message-bridge-contracts
+[submodule "lib\\message-bridge-contracts"]
+	branch = v0.0.1
