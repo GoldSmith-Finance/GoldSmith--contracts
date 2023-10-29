@@ -71,9 +71,9 @@ contract Spoke is GoldSmithState, WmbApp {
         AgDataFeed = AgDataFeed_;
         liquidationRatio = 60000; // 60%
 
-        uint[] memory hubChains;
-        address[] memory hubAddresses;
-        bool[] memory booleans;
+        uint[] memory hubChains = new uint[](1);
+        address[] memory hubAddresses = new address[](1);
+        bool[] memory booleans = new bool[](1);
 
         hubChains[0] = hubChain;
         hubAddresses[0] = hubAddress;
@@ -355,6 +355,10 @@ contract Spoke is GoldSmithState, WmbApp {
             
         }
 
+        if(totalValueSupplied == 0 && totalValueBorrowed == 0) {
+            return false;
+        }
+
         return ((totalValueBorrowed * 100 ) / totalValueSupplied) > liquidationRatio;
     }
 
@@ -415,7 +419,7 @@ contract Spoke is GoldSmithState, WmbApp {
             "Wrong Params Sent"
         );
 
-        bool[] memory trueArray;
+        bool[] memory trueArray = new bool[](spokeChains_.length);
 
         for (uint i = 0; i < spokeChains_.length; i++) {
             spokeAddresses[spokeChains_[i]] = spokeAddresses_[i];
