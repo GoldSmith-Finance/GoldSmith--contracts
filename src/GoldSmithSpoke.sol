@@ -70,6 +70,16 @@ contract Spoke is GoldSmithState, WmbApp {
         AuDataFeed = AuDataFeed_;
         AgDataFeed = AgDataFeed_;
         liquidationRatio = 60000; // 60%
+
+        uint[] memory hubChains;
+        address[] memory hubAddresses;
+        bool[] memory booleans;
+
+        hubChains[0] = hubChain;
+        hubAddresses[0] = hubAddress;
+        booleans[0] = true;
+
+        setTrustedRemotesOverride(hubChains, hubAddresses, booleans);
     }
 
     function getChainlinkDataFeedLatestAnswer(
@@ -397,7 +407,7 @@ contract Spoke is GoldSmithState, WmbApp {
     }
 
     function adminAddSpokeContracts(
-        uint16[] memory spokeChains_,
+        uint[] memory spokeChains_,
         address[] memory spokeAddresses_
     ) public onlyAdmin {
         require(
@@ -405,9 +415,14 @@ contract Spoke is GoldSmithState, WmbApp {
             "Wrong Params Sent"
         );
 
+        bool[] memory trueArray;
+
         for (uint i = 0; i < spokeChains_.length; i++) {
             spokeAddresses[spokeChains_[i]] = spokeAddresses_[i];
+            trueArray[i] = true;
         }
+
+        setTrustedRemotesOverride(spokeChains_, spokeAddresses_, trueArray);
     }
 
     //prettier-ignore
@@ -424,5 +439,24 @@ contract Spoke is GoldSmithState, WmbApp {
     function removeUserFromSupplierList(uint index) public {
         poolSuppliers[index] = poolSuppliers[poolSuppliers.length - 1];
         poolSuppliers.pop();
+    }
+
+    function setTrustedRemotesOverride(
+        uint[] memory fromChainIds,
+        address[] memory froms,
+        bool[] memory trusted
+    ) internal {
+        require(
+            hasRole(DEFAULT_ADMIN_ROLE, msg.sender),
+            "Spoke: must have admin role to set trusted remotes"
+        );
+        require(
+            fromChainIds.length == froms.length &&
+                froms.length == trusted.length,
+            "Spoke: invalid input"
+        );
+        for (uint i = 0; i < fromChainIds.length; i++) {
+            trustedRemotes[fromChainIds[i]][froms[i]] = trusted[i];
+        }
     }
 }
