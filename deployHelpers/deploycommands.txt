@@ -1,0 +1,46 @@
+=================================
+Deploy Hub
+=================================
+
+//apothem
+forge create --rpc-url https://erpc.apothem.network/ --constructor-args-path deployHelpers/apothem/hub-constructor-args-apothem.txt --private-key {private-key} src/GoldSmithHub.sol:GoldSmithHub --legacy
+
+=================================
+Deploy dai
+=================================
+
+//apothem 
+forge create --rpc-url https://erpc.apothem.network/ --private-key {private-key} src/DAIToken.sol:DAIToken --legacy
+
+//wanchain
+forge create --rpc-url https://gwan-ssl.wandevs.org:46891 --private-key {private-key} src/DAIToken.sol:DAIToken
+
+=================================
+Deploy Gold Token
+=================================
+
+//apothem
+forge create --rpc-url https://erpc.apothem.network/ --constructor-args-path deployHelpers/apothem/au-constructor-args-apothem.txt --private-key {private-key} src/MetalToken.sol:MetalToken --legacy
+
+//wanchain
+forge create --rpc-url https://gwan-ssl.wandevs.org:46891 --constructor-args-path deployHelpers/wanchain/au-constructor-args-wanchain.txt --private-key {private-key} src/MetalToken.sol:MetalToken
+
+=================================
+Deploy Silver token
+=================================
+
+//apothem
+forge create --rpc-url https://erpc.apothem.network/ --constructor-args-path deployHelpers/apothem/ag-constructor-args-apothem.txt --private-key {private-key} src/MetalToken.sol:MetalToken --legacy
+
+//wanchain
+forge create --rpc-url https://gwan-ssl.wandevs.org:46891 --constructor-args-path deployHelpers/wanchain/ag-constructor-args-wanchain.txt --private-key {private-key} src/MetalToken.sol:MetalToken
+
+=================================
+Deploy spoke
+=================================
+
+//apothem
+forge create --rpc-url https://erpc.apothem.network/ --constructor-args-path deployHelpers/apothem/spoke-constructor-args-apothem.txt --private-key {private-key} src/GoldSmithSpoke.sol:Spoke --legacy
+
+//wanchain
+forge create --rpc-url https://gwan-ssl.wandevs.org:46891 --constructor-args-path deployHelpers/wanchain/spoke-constructor-args-wanchain.txt --private-key {private-key} src/GoldSmithSpoke.sol:Spoke
